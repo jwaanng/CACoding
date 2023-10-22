@@ -2,16 +2,18 @@ package data_access;
 
 import entity.User;
 import entity.UserFactory;
+import use_case.clear_users.ClearUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -94,6 +96,36 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
     @Override
     public boolean existsByName(String identifier) {
         return accounts.containsKey(identifier);
+    }
+
+    @Override
+    public void clearAllUsers() {
+        // FOR WK5 WK6 CODING
+        accounts.clear();
+        System.out.println("CLEARED");
+        save();
+    }
+
+    public boolean isEmpty(){
+        return accounts.isEmpty();
+    }
+
+    public ArrayList<String> getAllUsernames() {
+        ArrayList<String> usernames = new ArrayList<>();
+
+        if (accounts.isEmpty()) {
+            System.out.println("Accounts are empty");
+            return usernames;
+        }
+
+        for (User user : accounts.values()) {
+            String username = user.getName();
+            usernames.add(username);
+            System.out.println("INSIDE LOOP: " + user.getName());
+        }
+
+        System.out.println("OUT: " + usernames.toString());
+        return usernames;
     }
 
 }
